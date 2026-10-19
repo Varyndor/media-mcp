@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Media MCP
-Görsel üretim. Yalnızca studio.claude.gg.
+Görsel üretim.
 """
 
 import os

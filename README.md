@@ -1,6 +1,6 @@
 # Media MCP
 
-Media MCP, Claude CLI, Grok Build, Cursor, VS Code ve Windsurf içinden görsel üretmenizi sağlar. Üretim `https://studio.claude.gg` üzerinde yapılır.
+Media MCP, Claude CLI, Grok Build, Cursor, VS Code ve Windsurf içinden görsel üretmenizi sağlar. Üretim bağlı görsel servisi üzerinde yapılır.
 
 ## Dosyalar
 
@@ -77,7 +77,7 @@ Topaz modeli `topaz-image-upscale` kullanılır. `image_url` zorunludur ve tek b
 
 ## İstek nasıl ilerler
 
-1. İstek `POST https://studio.claude.gg/v1/images/generations` adresine gider. Yetkilendirme başlığı `Authorization: Bearer` şeklindedir.
+1. İstek görsel üretim adresine gider. Yetkilendirme başlığı `Authorization: Bearer` şeklindedir.
 2. Dönen iş kimliği `GET /v1/images/{id}` ile sorgulanır. Sorgular 3 saniyede bir yapılır ve en fazla 10 dakika sürer.
 3. `status` değeri `succeeded` olunca dosya `MEDIA_DIR` klasörüne iner. Dönen JSON içinde `model_used`, `api`, `output` altındaki `url` ve `local_files` bulunur.
 

@@ -1,6 +1,6 @@
 # Media MCP
 
-Görseller `https://studio.claude.gg` adresinde üretilir.
+Görseller bağlı serviste üretilir.
 
 Model seçilmezse sıra şöyledir:
 

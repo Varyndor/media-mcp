@@ -1,4 +1,4 @@
-# Studio görsel modelleri. Alanlar https://studio.claude.gg/v1/models ile aynı.
+# Görsel modeller. Alanlar servisin model listesiyle aynı.
 # skip: true olan alan bu modele gönderilmez.
 
 models:
