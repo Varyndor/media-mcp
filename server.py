@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-claude.gg Media MCP Server
+Media MCP
 Görsel üretim. Yalnızca studio.claude.gg.
 """
 

@@ -1,87 +1,87 @@
-# media-mcp
+# Media MCP
 
-stdio MCP sunucusu. Claude CLI ve Grok Build `server.py` sürecini açar. Görsel üretimi `https://studio.claude.gg` üzerinden yapılır.
+Media MCP, Claude CLI, Grok Build, Cursor, VS Code ve Windsurf içinden görsel üretmenizi sağlar. Üretim `https://studio.claude.gg` üzerinde yapılır. Müzik, ses, video ve 3D bu sunucuda yoktur.
 
 ## Dosyalar
 
-| Dosya | İş |
+| Dosya | Görevi |
 |---|---|
-| `server.py` | Üç aracı sunar, isteği atar, bitene kadar bekler, dosyayı indirir |
-| `adapter.py` | Ortak alan adını modelin beklediği gövdeye çevirir |
-| `adapters.yaml` | Her modelin kabul ettiği alan, limit ve atlanan alan |
-| `models.yaml` | Görsel zinciri ve studio adresi |
+| `server.py` | Üç aracı tanımlar, isteği gönderir, sonuç hazır olana kadar bekler ve dosyayı indirir |
+| `adapter.py` | Ortak alan adlarını her modelin beklediği gövdeye çevirir |
+| `adapters.yaml` | Her modelin kabul ettiği alanları, limitleri ve yok saydığı alanları tutar |
+| `models.yaml` | Görsel yedek zincirini ve studio adresini tutar |
 
-## Kullanım
+## Nasıl kullanılır
 
-Sohbete normal cümle yazılır. Claude veya Grok cümleyi `generate_image` alanlarına böler. JSON yazılmaz.
+Sohbete normal bir cümle yazmanız yeter. Claude veya Grok bu cümleyi `generate_image` alanlarına ayırır. JSON yazmanıza gerek yoktur.
 
-Model adı yoksa zincir çalışır. Ayar yoksa oran `16:9`, çözünürlük `1K`, kalite `medium`, adet `1` olur.
+Model adı söylemezseniz yedek zinciri çalışır. Ölçü söylemezseniz oran `16:9`, çözünürlük `1K`, kalite `medium` ve adet `1` olur.
 
-| Söylenen | Alan |
+| Ne söylersiniz | Hangi alana gider |
 |---|---|
 | Görselin tarifi | `prompt` |
-| "flux-2-pro ile" veya "seedream ile" | `model` |
+| "flux-2-pro ile üret" veya "seedream ile üret" | `model` |
 | "kare", "9:16", "21:9" | `aspect_ratio` |
-| "4K", "1080p" | `resolution` |
-| "high" | `quality`. Yalnız Sunburst |
-| "3 tane" | `generations_count` |
-| "1024x1024" | `custom_width`, `custom_height`. Yalnız Sunburst |
-| "seed 42" | `seed`. Yalnız FLUX.2 Pro |
-| Bir görsel URL'si | `reference_images`. Runway kabul etmez |
+| "4K" veya "1080p" | `resolution` |
+| "yüksek kalite" | `quality`. Yalnızca Sunburst kullanır |
+| "3 tane üret" | `generations_count` |
+| "1024x1024" | `custom_width` ve `custom_height`. Yalnızca Sunburst kullanır |
+| "seed 42" | `seed`. Yalnızca FLUX.2 Pro kullanır |
+| Bir görsel adresi | `reference_images`. Runway bunu kabul etmez |
 | "bu görseli 4 kat büyüt" | `upscale_image` |
 
-Örnek: "Kare, 4K, pembe benekli anime panda. Modeli flux-2-pro yap."
+Örnek: "Kare formatta, 4K, pembe benekli anime bir panda üret. Modeli flux-2-pro olsun."
 
-Tarif `prompt` alanına gider. Model ve oran ayrı alanlardır. Onları tarifin içine gömmek yerine ayrıca söylemek daha sağlamdır.
+Tarif `prompt` alanına gider. Model adı ve oran ayrı alanlardır. Bunları tarif cümlesinin içine gömmek yerine ayrıca söylemek daha güvenilirdir.
 
-Model bir alanı kabul etmiyorsa o alan isteğe konmaz. İstek hata vermez. `4K` FLUX'a gidince FLUX'un varsayılanı `1080p` olur. `quality` FLUX'a hiç gitmez.
+Bir model gönderdiğiniz alanı kabul etmiyorsa o alan istekten çıkarılır ve istek hata vermez. Örneğin `4K` değeri FLUX'a giderse FLUX kendi varsayılanı olan `1080p` çözünürlüğünü kullanır. `quality` alanı FLUX'a hiç gönderilmez.
 
 ## Araçlar
 
 ### generate_image
 
-`prompt` zorunlu. `model` boşsa zincir sırayla denenir. Bir model hata verirse sıradaki çalışır. `model` doluysa yalnız o model çağrılır.
+`prompt` zorunludur. `model` boşsa zincirdeki modeller sırayla denenir. Bir model hata verirse sıradaki model çalışır. `model` doluysa yalnızca o model çağrılır.
 
 Zincir: `gpt-image-2.5-sunburst` → `gemini-3-pro-image` → `flux-2-pro` → `bytedance-seedream-5-pro` → `recraft-v4.1` → `krea-2-large` → `runway-gen4-image`
 
-| Alan | Değer |
+| Alan | Kabul edilen değerler |
 |---|---|
-| `aspect_ratio` | `16:9` `4:3` `1:1` `3:4` `9:16` `21:9`. Varsayılan `16:9` |
-| `resolution` | `1K` `2K` `4K` `720p` `1080p`. Varsayılan `1K` |
-| `custom_width`, `custom_height` | 1–4096. Yalnız Sunburst |
-| `quality` | `low` `medium` `high`. Varsayılan `medium`. Yalnız Sunburst |
-| `generations_count` | 1–4. Varsayılan 1 |
-| `reference_images` | URL listesi |
-| `seed` | Sayı. Yalnız FLUX.2 Pro |
-| `enhance_prompt` | Varsayılan `false`. Yalnız FLUX.2 Pro |
+| `aspect_ratio` | `16:9`, `4:3`, `1:1`, `3:4`, `9:16`, `21:9`. Varsayılan `16:9` |
+| `resolution` | `1K`, `2K`, `4K`, `720p`, `1080p`. Varsayılan `1K` |
+| `custom_width`, `custom_height` | 1 ile 4096 arası. Yalnızca Sunburst |
+| `quality` | `low`, `medium`, `high`. Varsayılan `medium`. Yalnızca Sunburst |
+| `generations_count` | 1 ile 4 arası. Varsayılan 1 |
+| `reference_images` | Görsel adreslerinin listesi |
+| `seed` | Sayı. Yalnızca FLUX.2 Pro |
+| `enhance_prompt` | Varsayılan `false`. Yalnızca FLUX.2 Pro |
 
-Model bu alanı kabul etmiyorsa alan isteğe konmaz. Geçersiz enum, modelin varsayılanına düşer. Referans listesi modelin limitinde kesilir.
+Listede olmayan bir değer, o modelin varsayılanına düşer. Referans listesi modelin limitinden uzunsa liste kesilir.
 
-| Model | Prompt | Referans | Ek |
+| Model | Prompt sınırı | Referans sınırı | Ek |
 |---|---|---|---|
-| gpt-image-2.5-sunburst | 10000 | 10 | ölçü, kalite, çözünürlük `1K` `2K` `4K`, oran `16:9` `4:3` `1:1` `3:4` `9:16` |
+| gpt-image-2.5-sunburst | 10000 | 10 | özel ölçü, kalite, çözünürlük `1K` `2K` `4K`, oran `16:9` `4:3` `1:1` `3:4` `9:16` |
 | gemini-3-pro-image | 10000 | 6 | çözünürlük `1K` `2K` `4K`, aynı beş oran |
-| flux-2-pro | 10000 | 6 | `seed`, `enhance_prompt`, çözünürlük `720p` `1080p` `2K`, 14 oran (`21:9` `5:4` `3:2` `2:3` `4:5` `8:1` `4:1` `1:4` `1:8` dahil) |
-| bytedance-seedream-5-pro | 2000 | 14 | çözünürlük `1K` `2K`, orana `auto` eklenir |
+| flux-2-pro | 10000 | 6 | `seed`, `enhance_prompt`, çözünürlük `720p` `1080p` `2K`, 14 oran (`21:9`, `5:4`, `3:2`, `2:3`, `4:5`, `8:1`, `4:1`, `1:4`, `1:8` dahil) |
+| bytedance-seedream-5-pro | 2000 | 14 | çözünürlük `1K` `2K`, oran listesine `auto` eklenir |
 | recraft-v4.1 | 4000 | 6 | çözünürlük yok, beş oran |
 | krea-2-large | 4000 | 6 | çözünürlük yok, beş oran |
-| runway-gen4-image | 4000 | yok | yalnız metin, orana `21:9` eklenir |
+| runway-gen4-image | 4000 | yok | yalnızca metin, oran listesine `21:9` eklenir |
 
 ### upscale_image
 
-Topaz `topaz-image-upscale`. `image_url` zorunlu, tek görsel gider. `upscale_factor` `2` veya `4`, varsayılan `2`.
+Topaz modeli `topaz-image-upscale` kullanılır. `image_url` zorunludur ve tek bir görsel gider. `upscale_factor` `2` veya `4` olabilir. Varsayılan `2`dir.
 
 ### poll_result
 
-`job_id` ile açık studio işini sorgular. `generate_image` ve `upscale_image` işi kendi bekler. Bu araç, istemci işi ayrıca izlemek isterse durur.
+`job_id` ile sürmekte olan bir studio işini sorgular. `generate_image` ve `upscale_image` kendi işlerini zaten bekler. Bu aracı, işi ayrıca izlemek istediğinizde kullanırsınız.
 
-## Akış
+## İstek nasıl ilerler
 
-1. İstek `POST https://studio.claude.gg/v1/images/generations` adresine gider. Başlık `Authorization: Bearer`.
-2. Dönen iş kimliği `GET /v1/images/{id}` ile sorulur. Aralık 3 saniye, üst süre 10 dakika.
-3. `status` `succeeded` olunca URL `MEDIA_DIR` altına iner. Dönen JSON `model_used`, `api`, `output` içindeki `url` ve `local_files` alanlarını taşır.
+1. İstek `POST https://studio.claude.gg/v1/images/generations` adresine gider. Yetkilendirme başlığı `Authorization: Bearer` şeklindedir.
+2. Dönen iş kimliği `GET /v1/images/{id}` ile sorgulanır. Sorgular 3 saniyede bir yapılır ve en fazla 10 dakika sürer.
+3. `status` değeri `succeeded` olunca dosya `MEDIA_DIR` klasörüne iner. Dönen JSON içinde `model_used`, `api`, `output` altındaki `url` ve `local_files` bulunur.
 
-Studio kotası günde 500 istek. Sayaç 03:00 TR'de sıfırlanır.
+Studio kotası günde 500 istektir. Sayaç her gün 03:00 Türkiye saatinde sıfırlanır.
 
 ## Kurulum
 
@@ -89,33 +89,35 @@ Studio kotası günde 500 istek. Sayaç 03:00 TR'de sıfırlanır.
 pip install -r requirements.txt
 ```
 
-Anahtar dosyaya yazılmaz.
+Anahtar dosyaya yazılmaz. İndirme klasörünü şöyle belirleyebilirsiniz:
 
 ```powershell
 $env:MEDIA_DIR = "$env:USERPROFILE\media"
 ```
 
-Anahtar sırası: `STUDIO_API_KEY`, `MEDIA_API_KEY`, `ANTHROPIC_API_KEY`. Sunucu bunları PC ortamından okur. MCP kaydına anahtar eklenmez. `MEDIA_DIR` yoksa dosya `~/media` altına iner.
+Anahtar sırası şöyledir: `STUDIO_API_KEY`, `MEDIA_API_KEY`, `ANTHROPIC_API_KEY`. Sunucu bu değerleri bilgisayarınızın ortam değişkenlerinden okur. MCP kaydına anahtar eklemeniz gerekmez. `MEDIA_DIR` tanımlı değilse dosyalar `~/media` klasörüne iner.
 
-## İstemci
+## İstemciye ekleme
 
-Hepsi aynı stdio kaydıdır. `command` makinedeki Python, `args` bu depodaki `server.py`. Kayıtlara anahtar konmaz. Python süreci PC'de tanımlı `STUDIO_API_KEY`, `MEDIA_API_KEY` veya `ANTHROPIC_API_KEY` değerini alır.
+Aşağıdaki kayıtların hepsi aynı işi yapar. `command` bilgisayarınızdaki Python programıdır. `args` bu depodaki `server.py` dosyasıdır. Kayda anahtar yazmayın. Python süreci, bilgisayarda tanımlı `STUDIO_API_KEY`, `MEDIA_API_KEY` veya `ANTHROPIC_API_KEY` değerini kendisi alır.
 
-Üretim en fazla 10 dakika sürer. İstemcinin araç zaman aşımı bundan kısa olmamalı. Claude CLI kaydına `"timeout": 600000` eklenir. Grok Build kaydına `tool_timeout_sec = 700` eklenir.
+Bir üretim en fazla 10 dakika sürebilir. İstemcinin araç zaman aşımı bundan kısa olmamalıdır. Claude CLI kaydına `"timeout": 600000` ekleyin. Grok Build kaydına `tool_timeout_sec = 700` ekleyin.
 
-Zincir veya araç değişince istemci yeniden açılır. Açık oturum eski araç listesini tutar.
+Zincir veya araç listesi değişince istemciyi yeniden açın. Açık oturum eski araç listesini kullanmaya devam eder.
+
+Örneklerdeki `D:\media-mcp\server.py` yolunu, dosyayı koyduğunuz yolla değiştirin.
 
 ### Claude CLI
 
-Kullanıcı kapsamı, tüm projeler:
+Bu komut kaydı tüm projeleriniz için ekler:
 
 ```powershell
 claude mcp add --transport stdio --scope user media-mcp -- python D:\media-mcp\server.py
 ```
 
-Yerel kapsam yalnız o projeye yazılır. `--scope` verilmezse varsayılan odur. Komut kaydı `~/.claude.json` içine koyar.
+Kapsam vermezseniz kayıt yalnızca bulunduğunuz projeye yazılır. Komut bu kaydı `~/.claude.json` dosyasına koyar.
 
-Proje kapsamı, depo kökündeki `.mcp.json`. Anahtar bu dosyaya düz yazılmaz:
+Projeyle birlikte paylaşmak için kayıt depo kökündeki `.mcp.json` dosyasına gider. Anahtarı bu dosyaya düz metin olarak yazmayın:
 
 ```powershell
 claude mcp add --transport stdio --scope project media-mcp -- python D:\media-mcp\server.py
@@ -134,15 +136,15 @@ claude mcp add --transport stdio --scope project media-mcp -- python D:\media-mc
 }
 ```
 
-`.mcp.json` ilk açılışta onay ister. Kontrol: `claude mcp get media-mcp` ve oturum içinde `/mcp`.
+`.mcp.json` ilk açılışta onay ister. Kaydı `claude mcp get media-mcp` ile, oturum içinde de `/mcp` ile kontrol edebilirsiniz.
 
 ### Claude Desktop
 
-Code sekmesi CLI ile aynı ayarı okur. Yukarıdaki user veya project kaydı Desktop'ta da bağlanır. Connectors menüsü uzak servisler içindir. Bu sunucu yerel süreçtir, oradan eklenmez.
+Code sekmesi, Claude CLI ile aynı ayarı okur. Yukarıdaki kullanıcı veya proje kaydı Desktop'ta da bağlanır. Connectors menüsü uzak servisler içindir. Media MCP yerelde çalışan bir programdır ve o menüden eklenmez.
 
 ### Grok Build
 
-`~/.grok/config.toml`. Windows'ta `%USERPROFILE%\.grok\config.toml`.
+Kayıt `~/.grok/config.toml` dosyasındadır. Windows'ta yol `%USERPROFILE%\.grok\config.toml` şeklindedir.
 
 ```toml
 [mcp_servers.media-mcp]
@@ -151,19 +153,19 @@ args = ["D:\\media-mcp\\server.py"]
 tool_timeout_sec = 700
 ```
 
-Aynı blok bir deponun `.grok/config.toml` dosyasına yazılırsa yalnız o proje görür. Proje dosyası user dosyasının önüne geçer.
+Aynı bloğu bir deponun `.grok/config.toml` dosyasına yazarsanız yalnızca o proje görür. Proje dosyası, kullanıcı dosyasının önüne geçer.
 
-Komutla:
+Komutla eklemek için:
 
 ```powershell
 grok mcp add media-mcp -- python D:\media-mcp\server.py
 ```
 
-Grok, `compat.claude.mcps` açıkken Claude kaydını da tarar. Aynı isim varsa `config.toml` kazanır. Kontrol: `grok mcp doctor media-mcp`.
+`compat.claude.mcps` açıksa Grok, Claude kaydını da tarar. Aynı isim iki yerde varsa `config.toml` kazanır. Kontrol için `grok mcp doctor media-mcp` çalıştırın.
 
 ### Cursor
 
-Tüm projeler için `~/.cursor/mcp.json`. Tek proje için depo kökünde `.cursor/mcp.json`.
+Tüm projeler için dosya `~/.cursor/mcp.json` yolundadır. Tek bir proje için depo köküne `.cursor/mcp.json` koyun.
 
 ```json
 {
@@ -171,19 +173,19 @@ Tüm projeler için `~/.cursor/mcp.json`. Tek proje için depo kökünde `.curso
     "media-mcp": {
       "type": "stdio",
       "command": "python",
-      "args": ["D:\\media-mcp\\server.py"],
+      "args": ["D:\\media-mcp\\server.py"]
     }
   }
 }
 ```
 
-Cursor bu dosyayı Settings içindeki MCP bölümünden de açar. Sunucu açılmazsa Output panelinde MCP Logs bakılır.
+Bu dosyayı Cursor ayarlarındaki MCP bölümünden de açabilirsiniz. Sunucu açılmazsa Output panelinde MCP Logs kaydına bakın.
 
 ### VS Code
 
-Copilot agent için Command Palette: `MCP: Add Server`, sonra `Command (stdio)`. Komut `python`, argüman `D:\media-mcp\server.py`, ad `media-mcp`. Global seçilirse kayıt `~/.copilot/mcp-config.json` içine gider.
+Copilot için Command Palette'ten `MCP: Add Server` seçin, ardından `Command (stdio)` seçin. Komut `python`, argüman `D:\media-mcp\server.py`, ad `media-mcp` olsun. Global seçerseniz kayıt `~/.copilot/mcp-config.json` dosyasına gider.
 
-Elle yazılacak dosya workspace `.vscode/mcp.json` ise anahtar `servers` olur:
+Dosyayı elle workspace içindeki `.vscode/mcp.json` yoluna yazacaksanız üst anahtar `servers` olmalıdır:
 
 ```json
 {
@@ -191,27 +193,27 @@ Elle yazılacak dosya workspace `.vscode/mcp.json` ise anahtar `servers` olur:
     "media-mcp": {
       "type": "stdio",
       "command": "python",
-      "args": ["D:\\media-mcp\\server.py"],
+      "args": ["D:\\media-mcp\\server.py"]
     }
   }
 }
 ```
 
-Depo kökündeki `.mcp.json` anahtarı `mcpServers` kalır. İki biçim birbirinin yerine kopyalanmaz.
+Depo kökündeki `.mcp.json` dosyasında üst anahtar `mcpServers` kalır. Bu iki biçimi birbirinin yerine kopyalamayın.
 
 ### Windsurf
 
-Cascade paneli, sağ üst `...`, `Open MCP config file`. Dosya Windows'ta `%APPDATA%\devin\mcp_config.json`.
+Cascade panelinde sağ üstteki `...` menüsünden `Open MCP config file` seçin. Windows'ta dosya `%APPDATA%\devin\mcp_config.json` yolundadır.
 
 ```json
 {
   "mcpServers": {
     "media-mcp": {
       "command": "python",
-      "args": ["D:\\media-mcp\\server.py"],
+      "args": ["D:\\media-mcp\\server.py"]
     }
   }
 }
 ```
 
-Bu kayıt eski Cascade ajanı içindir. Devin Local ajanı MCP kaydını Devin CLI yapılandırma dosyasından okur. Takım allowlist'i açıksa `media-mcp` adı listeye eklenmeden sunucu başlamaz.
+Bu kayıt eski Cascade ajanı içindir. Devin Local ajanı MCP kaydını Devin CLI yapılandırma dosyasından okur. Takım izin listesi açıksa `media-mcp` adı listeye eklenmeden sunucu başlamaz.
