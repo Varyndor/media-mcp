@@ -1,6 +1,6 @@
 # Media MCP
 
-Media MCP, Claude CLI, Grok Build, Cursor, VS Code ve Windsurf içinden görsel üretmenizi sağlar. Üretim `https://studio.claude.gg` üzerinde yapılır. Müzik, ses, video ve 3D bu sunucuda yoktur.
+Media MCP, Claude CLI, Grok Build, Cursor, VS Code ve Windsurf içinden görsel üretmenizi sağlar. Üretim `https://studio.claude.gg` üzerinde yapılır.
 
 ## Dosyalar
 
@@ -27,7 +27,7 @@ Model adı söylemezseniz yedek zinciri çalışır. Ölçü söylemezseniz oran
 | "3 tane üret" | `generations_count` |
 | "1024x1024" | `custom_width` ve `custom_height`. Yalnızca Sunburst kullanır |
 | "seed 42" | `seed`. Yalnızca FLUX.2 Pro kullanır |
-| Bir görsel adresi | `reference_images`. Runway bunu kabul etmez |
+| Bir görsel adresi | `reference_images` |
 | "bu görseli 4 kat büyüt" | `upscale_image` |
 
 Örnek: "Kare formatta, 4K, pembe benekli anime bir panda üret. Modeli flux-2-pro olsun."
@@ -65,7 +65,7 @@ Listede olmayan bir değer, o modelin varsayılanına düşer. Referans listesi 
 | bytedance-seedream-5-pro | 2000 | 14 | çözünürlük `1K` `2K`, oran listesine `auto` eklenir |
 | recraft-v4.1 | 4000 | 6 | çözünürlük yok, beş oran |
 | krea-2-large | 4000 | 6 | çözünürlük yok, beş oran |
-| runway-gen4-image | 4000 | yok | yalnızca metin, oran listesine `21:9` eklenir |
+| runway-gen4-image | 4000 | | oran listesine `21:9` eklenir |
 
 ### upscale_image
 

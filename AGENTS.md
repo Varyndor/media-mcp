@@ -9,5 +9,3 @@ Model seçilmezse sıra şöyledir:
 Büyütme modeli `topaz-image-upscale`dir.
 
 Anahtar koda yazılmaz. Okuma sırası `STUDIO_API_KEY`, `MEDIA_API_KEY`, `ANTHROPIC_API_KEY` şeklindedir. Değer bilgisayarın ortam değişkenlerinden gelir. MCP kaydına anahtar eklenmez.
-
-Müzik, ses, video ve 3D isteklerinde üretim denenmez.
