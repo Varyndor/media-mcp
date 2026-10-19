@@ -1,0 +1,46 @@
+image:
+  tools:
+    upscale:
+      id: topaz-image-upscale
+      api: studio
+      endpoint: POST /v1/images/generations
+  primary:
+    id: gpt-image-2.5-sunburst
+    api: studio
+    endpoint: POST /v1/images/generations
+  fallback1:
+    id: gemini-3-pro-image
+    api: studio
+    endpoint: POST /v1/images/generations
+  fallback2:
+    id: flux-2-pro
+    api: studio
+    endpoint: POST /v1/images/generations
+  fallback3:
+    id: bytedance-seedream-5-pro
+    api: studio
+    endpoint: POST /v1/images/generations
+  fallback4:
+    id: recraft-v4.1
+    api: studio
+    endpoint: POST /v1/images/generations
+  fallback5:
+    id: krea-2-large
+    api: studio
+    endpoint: POST /v1/images/generations
+  fallback6:
+    id: runway-gen4-image
+    api: studio
+    endpoint: POST /v1/images/generations
+poll:
+  studio:
+    endpoint: GET /v1/images/:batchId
+    interval_sec: 2-3
+apis:
+  studio:
+    base_url: https://studio.claude.gg/v1
+    auth_header: Authorization
+    auth_prefix: Bearer
+    api_key: ${STUDIO_API_KEY}
+    daily_limit: 500
+    reset_time: "03:00 TR"
